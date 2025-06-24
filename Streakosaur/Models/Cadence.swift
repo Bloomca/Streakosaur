@@ -18,12 +18,12 @@ enum Cadence: Codable {
     case days([Days]) // ask only on specific days (e.g. monday + thursday + friday)
 }
 
-enum Days: Codable {
-    case monday
-    case tuesday
-    case wednesday
-    case thursday
-    case friday
-    case saturday
-    case sunday
+enum Days: String, Codable {
+    case monday = "Monday"
+    case tuesday = "Tuesday"
+    case wednesday = "Wednesday"
+    case thursday = "Thursday"
+    case friday = "Friday"
+    case saturday = "Saturday"
+    case sunday = "Sunday"
 }

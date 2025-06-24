@@ -25,3 +25,24 @@ extension StreakCadence: FetchableRecord, PersistableRecord, TableRecord {
     
     static let streak = belongsTo(Streak.self)
 }
+
+extension StreakCadence {
+    init(from cadence: Cadence, streakId: String) {
+        self.id = UUID().uuidString
+        self.streakId = streakId
+        
+        switch cadence {
+        case .daily(let daysToAsk, let daysToSkip):
+            self.cadenceType = "daily"
+            self.cadenceValue = "\(daysToAsk),\(daysToSkip)"
+        case .weekly(let weeksToAsk, let weeksToSkip):
+            self.cadenceType = "weekly"
+            self.cadenceValue = "\(weeksToAsk),\(weeksToSkip)"
+        case .days(let days):
+            self.cadenceType = "days"
+            self.cadenceValue = days.map({ $0.rawValue }).joined(separator: ",")
+        }
+        
+        self.startDate = Date()
+    }
+}

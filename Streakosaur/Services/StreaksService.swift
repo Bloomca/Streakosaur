@@ -23,4 +23,21 @@ import Foundation
             fatalError(error.localizedDescription)
         }
     }
+    
+    public func createStreak(title: String, description: String, targetRate: Int, cadence: Cadence) -> Bool {
+        let newStreakId = UUID().uuidString
+        let newStreak = Streak(id: newStreakId, title: title, description: description, targetRate: targetRate)
+        
+        /// TODO: switch to a transaction
+        do {
+            try streakManager.createStreak(newStreak)
+            let newStreakCadence = StreakCadence(from: cadence, streakId: newStreakId)
+            try streakManager.createStreakCadence(newStreakCadence)
+            
+            return true
+        } catch {
+            print(error)
+            return false
+        }
+    }
 }

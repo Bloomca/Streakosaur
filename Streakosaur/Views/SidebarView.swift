@@ -23,7 +23,9 @@ struct SidebarView: View {
                     Text("Add Streak")
                 }
             }
+            .buttonStyle(.borderedProminent)
         }
+        .padding()
     }
 }
 

@@ -11,6 +11,26 @@ struct DailyCadenceConfiguration: View {
     @Binding var daysToAsk: Int
     @Binding var daysToSkip: Int
     
+    var explanation: String {
+        let prefix = "Ask for an update "
+        
+        /// if we are not skipping any days, it means we'll ask every day regardless
+        if daysToSkip == 0 {
+            return prefix + "every day"
+        }
+        
+        if daysToAsk == 1 {
+            if daysToSkip == 1 {
+                return prefix + "every other day"
+            } else {
+                /// e.g. 2 days to skip: 1 day to ask, 2 to skip = 3 days total
+                return prefix + "every \(daysToSkip + 1) days"
+            }
+        }
+        
+        return prefix + "every \(daysToAsk) days, and then skip \(daysToSkip) \(daysToSkip == 1 ? "day" : "days")"
+    }
+    
     var body: some View {
         Form {
             Picker("Days in a row to ask", selection: $daysToAsk) {
@@ -29,6 +49,12 @@ struct DailyCadenceConfiguration: View {
                 Text("4").tag(4)
                 Text("5").tag(5)
             }.pickerStyle(.segmented)
+            
+            if !explanation.isEmpty {
+                Text(explanation)
+                    .italic()
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 }

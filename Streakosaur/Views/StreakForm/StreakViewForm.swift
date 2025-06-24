@@ -9,6 +9,7 @@ import SwiftUI
 
 struct StreakViewForm: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(StreaksService.self) private var streaksService
     
     @State private var title: String = ""
     @State private var description: String = ""
@@ -24,12 +25,12 @@ struct StreakViewForm: View {
     @State private var weeksToSkip = 0
     
     /// state for specific days cadence settings
-    @State private var selectedDays: Set<String> = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-    
-    private var dailyCadence = Cadence.daily(1, 1)
-    private var weeklyCadence = Cadence.weekly(1, 1)
-    private var daysCadence = Cadence.days([.monday, .tuesday, .wednesday, .thursday, .friday])
-    
+    @State private var selectedDays: Set<Days> = [.monday, .tuesday, .wednesday, .thursday, .friday] {
+        didSet {
+            print("selectedDays did change: \(selectedDays)")
+        }
+    }
+        
     var isDisabled: Bool {
         if title.isEmpty {
             return true
@@ -50,7 +51,7 @@ struct StreakViewForm: View {
                     Slider(value: $targetRate, in: 1...100)
                     Text("Target rate: \(Int(targetRate))%")
                 }
-                
+            
                 Picker("Select Frequency", selection: $cadenceType) {
                     Text("Daily").tag(CadenceType.daily)
                     Text("Weekly").tag(CadenceType.weekly)
@@ -64,11 +65,18 @@ struct StreakViewForm: View {
                 case .weekly:
                     WeeklyCadenceConfiguration(weeksToAsk: $weeksToAsk, weeksToSkip: $weeksToSkip)
                 case .days:
-                    DaysCadenceConfiguration(selectedDays: $selectedDays)
+                    VStack {
+                        DaysCadenceConfiguration(selectedDays: $selectedDays)
+                    }
+                    /// this is crucial, otherwise SwiftUI does not correctly registers updates
+                    /// in the child View. It can also be solved if there is any dependency on
+                    /// selectedDays in this component, but this is more reliable
+                    .id(selectedDays.hashValue)
                 }
                 
                 HStack {
                     Button {
+                        createStreak()
                         dismiss()
                     } label: {
                         Text("Cancel")
@@ -88,6 +96,10 @@ struct StreakViewForm: View {
         }
         .padding()
         .frame(minHeight: 500)
+    }
+    
+    private func createStreak() {
+        
     }
 }
 

@@ -20,6 +20,12 @@ class StreakManager {
         }
     }
     
+    func createStreakCadence(_ streakCadence: StreakCadence) throws {
+        try dbQueue.write { db in
+            try streakCadence.insert(db)
+        }
+    }
+    
     func updateStreak(_ streak: Streak) throws {
         try dbQueue.write { db in
             try streak.update(db)

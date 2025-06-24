@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct DaysCadenceConfiguration: View {
-    @Binding var selectedDays: Set<String>
+    @Binding var selectedDays: Set<Days>
     
-    /// hardcoded values, but this component is highly tied to the form, so it should be okay
-    let weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    let weekdays: [Days] = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]
 
     var body: some View {
         VStack {
             HStack {
-                ForEach(weekdays, id: \.self) { day in
-                    Button(day.prefix(3)) {
+                ForEach(weekdays, id: \.self.rawValue) { day in
+                    Button(day.rawValue.prefix(3)) {
+                        print("Before: \(selectedDays)")
                         if selectedDays.contains(day) {
                             if selectedDays.count > 1 {
                                 selectedDays.remove(day)
@@ -25,9 +25,12 @@ struct DaysCadenceConfiguration: View {
                         } else {
                             selectedDays.insert(day)
                         }
+                        
+                        print("After: \(selectedDays)")
                     }
-                    .buttonStyle(.bordered)
                     .background(selectedDays.contains(day) ? Color.accentColor : Color.clear)
+                    .foregroundColor(selectedDays.contains(day) ? .white : .primary)
+                    .buttonStyle(.bordered)
                     .cornerRadius(6)
                 }
             }
