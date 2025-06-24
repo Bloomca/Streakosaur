@@ -16,5 +16,9 @@ struct StreakosaurApp: App {
             ContentView()
                 .environment(streaksService)
         }
+        
+        WindowGroup("New Streak", id: "new-streak") {
+            StreakViewForm()
+        }
     }
 }
