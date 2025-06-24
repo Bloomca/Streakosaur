@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		560E41E12E0A2BF600369558 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 560E41E02E0A2BF600369558 /* GRDB */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		560E41CC2E0A23BA00369558 /* Streakosaur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Streakosaur.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				560E41E12E0A2BF600369558 /* GRDB in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = Streakosaur;
 			packageProductDependencies = (
+				560E41E02E0A2BF600369558 /* GRDB */,
 			);
 			productName = Streakosaur;
 			productReference = 560E41CC2E0A23BA00369558 /* Streakosaur.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = 560E41C32E0A23B900369558;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				560E41DF2E0A2BF600369558 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 560E41CD2E0A23BA00369558 /* Products */;
 			projectDirPath = "";
@@ -321,6 +330,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		560E41DF2E0A2BF600369558 /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/groue/GRDB.swift.git";
+			requirement = {
+				kind = exactVersion;
+				version = 7.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		560E41E02E0A2BF600369558 /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 560E41DF2E0A2BF600369558 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
+			productName = GRDB;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 560E41C42E0A23B900369558 /* Project object */;
 }
