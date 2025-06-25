@@ -38,10 +38,9 @@ final class StreakCadenceService {
                 return []
             }
             
-            /// if there is no latest streak entry, we don't need to calculate current cycle
             if let latestStreakEntry {
                 let timeSince = latestStreakEntry.date.timeIntervalSince(currentStreakCadence.startDate)
-                let cycles = round(timeSince / Double(cycleLength))
+                let cycles = round(timeSince / Double(cycleLength)) + 1
                 let startCycle = currentStreakCadence.startDate.addingTimeInterval(Double(cycleLength) * cycles)
                 
                 return getClosestOccurrences(
@@ -50,6 +49,7 @@ final class StreakCadenceService {
                     streakCadence: currentStreakCadence
                 )
             } else {
+                /// if there is no latest streak entry, we don't need to calculate current cycle
                 return getClosestOccurrences(
                     startCycle: currentStreakCadence.startDate,
                     cycleLength: cycleLength,
@@ -89,19 +89,21 @@ final class StreakCadenceService {
     
     private func getClosestOccurrences(startCycle: Date, cycleLength: Int, streakCadence: StreakCadence) -> [Occurrence] {
         switch streakCadence.cadence {
-        case .daily(let daysToAsk, let daysToSkip):
+        case .daily(let daysToAsk, _):
             return getIntervalOccurrences(
                 startCycle: startCycle,
                 cycleLength: cycleLength,
                 intervalsToAsk: daysToAsk,
-                intervalLength: 24 * 60 * 60
+                intervalLength: 24 * 60 * 60,
+                streakCadence: streakCadence
             )
         case .weekly(let weeksToAsk, _):
             return getIntervalOccurrences(
                 startCycle: startCycle,
                 cycleLength: cycleLength,
                 intervalsToAsk: weeksToAsk,
-                intervalLength: 24 * 60 * 60 * 7
+                intervalLength: 24 * 60 * 60 * 7,
+                streakCadence: streakCadence
             )
         case .days(let days):
             return getDaysOccurrences(startCycle: startCycle, days: days)
@@ -112,27 +114,28 @@ final class StreakCadenceService {
         startCycle: Date,
         cycleLength: Int,
         intervalsToAsk: Int,
-        intervalLength: Int
+        intervalLength: Int,
+        streakCadence: StreakCadence
     ) -> [Occurrence] {
         var occurrences: [Occurrence] = []
-        var referenceDate = Date()
+        let referenceDate = Date()
         var date = startCycle
         for i in 1...intervalsToAsk {
             if date > referenceDate {
-                occurrences.append(Occurrence(type: .future, date: date, marked: false))
+                occurrences.append(Occurrence(streakCadenceId: streakCadence.id, type: .future, date: date, marked: false))
             } else {
                 let isLast = i == intervalsToAsk
                 if !isLast {
                     if date.addingTimeInterval(Double(intervalLength)) > referenceDate {
-                        occurrences.append(Occurrence(type: .current, date: date, marked: false))
+                        occurrences.append(Occurrence(streakCadenceId: streakCadence.id, type: .current, date: date, marked: false))
                     } else {
-                        occurrences.append(Occurrence(type: .past, date: date, marked: false))
+                        occurrences.append(Occurrence(streakCadenceId: streakCadence.id, type: .past, date: date, marked: false))
                     }
                 } else {
                     if startCycle.addingTimeInterval(Double(cycleLength)) > referenceDate {
-                        occurrences.append(Occurrence(type: .current, date: date, marked: false))
+                        occurrences.append(Occurrence(streakCadenceId: streakCadence.id, type: .current, date: date, marked: false))
                     } else {
-                        occurrences.append(Occurrence(type: .past, date: date, marked: false))
+                        occurrences.append(Occurrence(streakCadenceId: streakCadence.id, type: .past, date: date, marked: false))
                     }
                 }
             }

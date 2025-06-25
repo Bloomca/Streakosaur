@@ -32,14 +32,14 @@ struct StreakView: View {
                             Text(formatStreakDate(occurrence.date))
                             
                             Button {
-                                //
+                                completeStreakEntry(occurrence: occurrence, success: false)
                             } label: {
                                 Text("Miss this instance")
                             }
                             .disabled(occurrence.type == .future)
                             
                             Button {
-                                
+                                completeStreakEntry(occurrence: occurrence, success: true)
                             } label: {
                                 Text("Complete this instance")
                             }
@@ -74,6 +74,18 @@ struct StreakView: View {
         } catch {
             print(error)
             self.error = .couldNotLoad
+        }
+    }
+    
+    private func completeStreakEntry(occurrence: Occurrence, success: Bool) {
+        let result = streaksService.createStreakEntry(
+            streakCadenceId: occurrence.streakCadenceId,
+            completed: success,
+            date: occurrence.date
+        )
+        
+        if result == true {
+            loadStreak()
         }
     }
 }

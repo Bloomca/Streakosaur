@@ -37,4 +37,21 @@ import Foundation
             return false
         }
     }
+    
+    public func createStreakEntry(streakCadenceId: String, completed: Bool, date: Date) -> Bool {
+        do {
+            /// TODO: add a check to make sure it is the latest streak entry
+            let newStreakEntry = StreakEntry(
+                id: UUID().uuidString,
+                streakCadenceId: streakCadenceId,
+                success: completed,
+                date: date
+            )
+            try streakManager.createStreakEntry(newStreakEntry)
+            return true
+        } catch {
+            print(error)
+            return false
+        }
+    }
 }

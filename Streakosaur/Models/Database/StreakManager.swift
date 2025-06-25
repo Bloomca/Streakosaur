@@ -80,4 +80,10 @@ class StreakManager {
                 .fetchOne(db)
         }
     }
+    
+    func createStreakEntry(_ streakEntry: StreakEntry) throws {
+        try dbQueue.write { db in
+            try streakEntry.insert(db)
+        }
+    }
 }

@@ -14,6 +14,7 @@ enum OccurrenceType {
 
 struct Occurrence: Identifiable {
     var id = UUID()
+    var streakCadenceId: String
     var type: OccurrenceType
     var date: Date
     var marked: Bool
