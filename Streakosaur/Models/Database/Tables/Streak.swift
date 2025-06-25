@@ -6,7 +6,7 @@
 //
 import GRDB
 
-struct Streak: Codable, Identifiable {
+struct Streak: Codable, Identifiable, Hashable {
     var id: String
     var title: String
     var description: String

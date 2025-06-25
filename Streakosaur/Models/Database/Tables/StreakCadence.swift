@@ -45,4 +45,35 @@ extension StreakCadence {
         
         self.startDate = Date()
     }
+    
+    var cadence: Cadence {
+        switch cadenceType {
+        case "daily":
+            let values = cadenceValue.split(separator: ",").map { Int($0) }
+            let daysToAsk = values[0]
+            let daysToSkip = values[1]
+            guard values.count == 2, let daysToAsk, let daysToSkip else {
+                fatalError("Invalid cadenceValue: \(cadenceValue)")
+            }
+            return .daily(daysToAsk, daysToSkip)
+        case "weekly":
+            let values = cadenceValue.split(separator: ",").map { Int($0) }
+            let weeksToAsk = values[0]
+            let weeksToSkip = values[1]
+            guard values.count == 2, let weeksToAsk, let weeksToSkip else {
+                fatalError("Invalid cadenceValue: \(cadenceValue)")
+            }
+            return .weekly(weeksToAsk, weeksToSkip)
+        case "days":
+            return .days(cadenceValue.split(separator: ",").compactMap({ Days(rawValue: String($0) )}))
+        default:
+            fatalError("Invalid cadenceType: \(cadenceType)")
+        }
+    }
+}
+
+extension StreakCadence {
+    enum CodingKeys: String, CodingKey, ColumnExpression {
+        case id, streakId, cadenceType, cadenceValue, startDate, endDate
+    }
 }

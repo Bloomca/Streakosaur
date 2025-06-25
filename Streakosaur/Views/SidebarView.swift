@@ -9,10 +9,17 @@ import SwiftUI
 
 struct SidebarView: View {
     @Environment(\.openWindow) private var openWindow
+    @Environment(AppStateVM.self) private var appStateVM
     
     var body: some View {
-        VStack {
+        @Bindable var vm = appStateVM
+        
+        VStack(spacing: 0) {
             Spacer()
+            
+            List(vm.streaks, selection: $vm.selectedStreak) { streak in
+                Label(streak.title, systemImage: "list.star").tag(streak.id)
+            }
             
             Button {
                 openWindow(id: "new-streak")
@@ -22,13 +29,10 @@ struct SidebarView: View {
                     
                     Text("Add Streak")
                 }
+                .padding(4)
             }
             .buttonStyle(.borderedProminent)
+            .padding(.bottom, 12)
         }
-        .padding()
     }
-}
-
-#Preview {
-    SidebarView()
 }

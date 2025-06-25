@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(AppStateVM.self) var appStateVM
+    
     var body: some View {
         NavigationSplitView(sidebar: {
             SidebarView()
         }, detail: {
-            Text("Detail")
+            if let streakId = appStateVM.selectedStreak {
+                StreakView(streakId: streakId)
+            }
         })
     }
-}
-
-#Preview {
-    ContentView()
 }

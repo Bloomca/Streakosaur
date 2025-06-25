@@ -23,3 +23,9 @@ extension StreakEntry: FetchableRecord, PersistableRecord, TableRecord {
     
     static let cadence = belongsTo(StreakCadence.self)
 }
+
+extension StreakEntry {
+    enum CodingKeys: String, CodingKey, ColumnExpression {
+        case id, streakCadenceId, success, date
+    }
+}

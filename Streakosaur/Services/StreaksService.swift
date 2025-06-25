@@ -6,22 +6,19 @@
 //
 import Foundation
 
-@Observable class StreaksService {
+@Observable final class StreaksService {
     private let streakManager: StreakManager
     
-    init() {
-        let appSupportURL = FileManager
-            .default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        let dbURL = appSupportURL.appendingPathComponent("YourAppName/database.sqlite")
-        
-        do {
-            try FileManager.default.createDirectory(at: dbURL.deletingLastPathComponent(),
-                                                  withIntermediateDirectories: true)
-
-            streakManager = try StreakManager(path: dbURL.path)
-        } catch {
-            fatalError(error.localizedDescription)
-        }
+    init(streakManager: StreakManager) {
+        self.streakManager = streakManager
+    }
+    
+    public func getAllStreaks() throws -> [Streak] {
+        try streakManager.getAllStreaks()
+    }
+    
+    public func getStreak(id: String) throws -> Streak? {
+        try streakManager.getSingleStreak(id: id)
     }
     
     public func createStreak(title: String, description: String, targetRate: Int, cadence: Cadence) -> Bool {
@@ -33,7 +30,7 @@ import Foundation
             try streakManager.createStreak(newStreak)
             let newStreakCadence = StreakCadence(from: cadence, streakId: newStreakId)
             try streakManager.createStreakCadence(newStreakCadence)
-            
+                        
             return true
         } catch {
             print(error)

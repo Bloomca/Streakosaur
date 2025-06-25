@@ -76,7 +76,6 @@ struct StreakViewForm: View {
                 
                 HStack {
                     Button {
-                        createStreak()
                         dismiss()
                     } label: {
                         Text("Cancel")
@@ -84,7 +83,12 @@ struct StreakViewForm: View {
                     }
                     
                     Button {
-                        dismiss()
+                        let success = createStreak()
+                        if success {
+                            dismiss()
+                        } else {
+                            /// TODO: show an error
+                        }
                     } label: {
                         Text("Add New Streak")
                             .padding(4)
@@ -98,8 +102,22 @@ struct StreakViewForm: View {
         .frame(minHeight: 500)
     }
     
-    private func createStreak() {
+    private func createStreak() -> Bool {
+        let cadence: Cadence = switch cadenceType {
+        case .daily:
+            .daily(daysToAsk, daysToSkip)
+        case .weekly:
+            .weekly(weeksToAsk, weeksToSkip)
+        case .days:
+            .days(Array(selectedDays))
+        }
         
+        return streaksService.createStreak(
+            title: title,
+            description: description,
+            targetRate: Int(targetRate),
+            cadence: cadence
+        )
     }
 }
 
